@@ -14,7 +14,6 @@
   --line:#1f242b;
   --accent:#f39a17;
   --steel:#93a3ad;
-  --danger:#ff8080;
 }
 
 *{box-sizing:border-box}
@@ -24,44 +23,23 @@ body{
   color:var(--text);
   font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
+.container{max-width:1020px; margin:0 auto; padding:26px 16px 44px;}
 
-.container{
-  max-width:1020px;
-  margin:0 auto;
-  padding:26px 16px 44px;
-}
-
-.header{
-  display:flex;
-  justify-content:center;
-  margin-bottom:10px;
-}
+.header{display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:10px;}
+.logoWrap{display:flex; align-items:center; justify-content:center;}
 .logo{
-  height:78px;
-  width:auto;
-  display:block;
+  height:78px; width:auto; display:block;
   filter:drop-shadow(0 10px 22px rgba(0,0,0,.5));
 }
 .logoFallback{
-  display:none;
-  font-weight:950;
-  letter-spacing:1px;
-  font-size:34px;
+  display:none; font-weight:950; letter-spacing:1px; font-size:34px;
 }
 .logoFallback b{ color:var(--accent); }
 
-h1{
-  text-align:center;
-  margin:10px 0 8px;
-  letter-spacing:.2px;
-  font-size:30px;
-}
+h1{ text-align:center; margin:6px 0 8px; letter-spacing:.2px; font-size:30px; }
 .info{
-  text-align:center;
-  color:var(--muted);
-  margin:0 auto 16px;
-  max-width:860px;
-  line-height:1.45;
+  text-align:center; color:var(--muted);
+  margin:0 auto 16px; max-width:860px; line-height:1.45;
 }
 
 .card{
@@ -73,14 +51,8 @@ h1{
   box-shadow:0 16px 50px rgba(0,0,0,.35);
 }
 
-.grid{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:14px;
-}
-@media (max-width:900px){
-  .grid{ grid-template-columns:1fr; }
-}
+.grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+@media (max-width:900px){ .grid{grid-template-columns:1fr;} }
 
 details{
   border:1px solid rgba(255,255,255,.06);
@@ -91,7 +63,7 @@ details{
 summary{
   cursor:pointer;
   padding:12px 14px;
-  font-weight:900;
+  font-weight:950;
   letter-spacing:.2px;
   list-style:none;
 }
@@ -103,17 +75,9 @@ summary::-webkit-details-marker{display:none}
   flex-direction:column;
   gap:8px;
 }
-label{
-  font-weight:800;
-  font-size:12px;
-  letter-spacing:.2px;
-  color:#dfe6ee;
-}
-small{
-  color:var(--muted);
-  line-height:1.35;
-}
-input{
+label{font-weight:900; font-size:12px; letter-spacing:.2px; color:#dfe6ee;}
+small{color:var(--muted); line-height:1.35}
+input[type="text"]{
   padding:12px;
   border-radius:12px;
   border:1px solid var(--line);
@@ -122,32 +86,24 @@ input{
   outline:none;
   font-size:14px;
 }
-input:focus{
+input[type="text"]:focus{
   border-color:rgba(243,154,23,.7);
   box-shadow:0 0 0 4px rgba(243,154,23,.12);
 }
 
-.actions{
-  display:flex;
-  gap:10px;
-  margin-top:12px;
-}
+.actions{display:flex; gap:10px; margin-top:12px;}
 button{
   flex:1;
   padding:14px;
   border:none;
   border-radius:12px;
-  font-weight:950;
+  font-weight:1000;
   cursor:pointer;
   background:linear-gradient(180deg, #ffb347 0%, var(--accent) 70%);
   color:#000;
 }
-button.ghost{
-  background:transparent;
-  border:1px solid var(--line);
-  color:var(--text);
-}
-button:active{ transform:translateY(1px); }
+button.ghost{background:transparent; border:1px solid var(--line); color:var(--text);}
+button:active{transform:translateY(1px);}
 
 .error{
   margin-top:10px;
@@ -160,12 +116,8 @@ button:active{ transform:translateY(1px); }
 }
 
 .resultsHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-bottom:10px;
+  display:flex; justify-content:space-between; align-items:flex-end;
+  gap:12px; flex-wrap:wrap; margin-bottom:10px;
 }
 .badge{
   border:1px solid rgba(147,163,173,.25);
@@ -174,17 +126,11 @@ button:active{ transform:translateY(1px); }
   padding:8px 10px;
   border-radius:999px;
   font-size:12px;
-  font-weight:900;
+  font-weight:1000;
 }
 
-.results{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:12px;
-}
-@media (max-width:720px){
-  .results{ grid-template-columns:1fr; }
-}
+.results{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+@media (max-width:720px){ .results{grid-template-columns:1fr;} }
 
 .box{
   border:1px solid var(--line);
@@ -196,24 +142,23 @@ button:active{ transform:translateY(1px); }
   display:block;
   font-size:12px;
   color:var(--muted);
-  font-weight:900;
+  font-weight:1000;
   letter-spacing:.2px;
 }
 .box strong{
   display:block;
   font-size:18px;
   margin-top:6px;
-  font-weight:1000;
+  font-weight:1100;
 }
 .box em{
   display:block;
   margin-top:6px;
   color:var(--steel);
   font-style:normal;
-  font-weight:900;
+  font-weight:950;
   font-size:13px;
 }
-.muted{ color:var(--muted); font-weight:800; }
 
 .cta{
   display:block;
@@ -222,26 +167,34 @@ button:active{ transform:translateY(1px); }
   margin-top:16px;
   padding:16px;
   border-radius:14px;
-  font-weight:1000;
+  font-weight:1100;
   background:linear-gradient(180deg, #ffb347 0%, var(--accent) 70%);
   color:#000;
   box-shadow:0 10px 26px rgba(243,154,23,.18);
 }
 
-.note{
-  margin-top:10px;
-  color:var(--muted);
-  line-height:1.4;
-  font-weight:700;
-}
-.codepill{
+.note{margin-top:10px; color:var(--muted); line-height:1.4; font-weight:800;}
+.pill{
   display:inline-block;
   padding:3px 8px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.08);
   background:rgba(255,255,255,.05);
   color:#dfe6ee;
-  font-weight:900;
+  font-weight:1000;
+  font-size:12px;
+}
+
+.logoTools{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+}
+.logoTools input[type="file"]{
+  color:var(--muted);
+  font-weight:800;
   font-size:12px;
 }
 </style>
@@ -251,10 +204,16 @@ button:active{ transform:translateY(1px); }
 <div class="container">
 
   <div class="header">
-    <!-- Logo: el archivo que has subido es jrunlab.png -->
-    <img src="jrunlab.png" class="logo" alt="JRUN Logo"
-         onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='block';" />
-    <div id="logoFallback" class="logoFallback">J<b>RUN</b></div>
+    <div class="logoWrap">
+      <img id="logoImg" src="jrunlab.png" class="logo" alt="JRUN Logo"
+           onerror="tryAltLogo()" />
+      <div id="logoFallback" class="logoFallback">J<b>RUN</b></div>
+    </div>
+
+    <div class="logoTools">
+      <small>Si el logo no se ve en GitHub Pages, cárgalo aquí:</small>
+      <input id="logoFile" type="file" accept="image/*" />
+    </div>
   </div>
 
   <h1>Calculadora de BAM y Zonas</h1>
@@ -272,7 +231,7 @@ button:active{ transform:translateY(1px); }
           <summary>1 km</summary>
           <div class="detailsBody">
             <label>Tiempo (mm:ss)</label>
-            <input id="t1k" placeholder="Ej: 3:45" />
+            <input id="t1k" type="text" placeholder="Ej: 3:45" />
             <small>Rellena lo que sepas. Cuantos más campos, mejor.</small>
           </div>
         </details>
@@ -283,7 +242,7 @@ button:active{ transform:translateY(1px); }
           <summary>2 km</summary>
           <div class="detailsBody">
             <label>Tiempo (mm:ss)</label>
-            <input id="t2k" placeholder="Ej: 7:50" />
+            <input id="t2k" type="text" placeholder="Ej: 7:50" />
             <small>Rellena lo que sepas. Cuantos más campos, mejor.</small>
           </div>
         </details>
@@ -294,7 +253,7 @@ button:active{ transform:translateY(1px); }
           <summary>5 km</summary>
           <div class="detailsBody">
             <label>Tiempo (mm:ss)</label>
-            <input id="t5k" placeholder="Ej: 18:45" />
+            <input id="t5k" type="text" placeholder="Ej: 18:45" />
             <small>Referencia muy sólida si está bien medida.</small>
           </div>
         </details>
@@ -305,7 +264,7 @@ button:active{ transform:translateY(1px); }
           <summary>10 km</summary>
           <div class="detailsBody">
             <label>Tiempo (mm:ss)</label>
-            <input id="t10k" placeholder="Ej: 39:30" />
+            <input id="t10k" type="text" placeholder="Ej: 39:30" />
             <small>Referencia muy sólida si está bien medida.</small>
           </div>
         </details>
@@ -316,7 +275,7 @@ button:active{ transform:translateY(1px); }
           <summary>Media maratón (21,0975 km)</summary>
           <div class="detailsBody">
             <label>Tiempo (hh:mm:ss o mm:ss)</label>
-            <input id="thm" placeholder="Ej: 1:29:30" />
+            <input id="thm" type="text" placeholder="Ej: 1:29:30" />
             <small>Útil para perfilar componente aeróbico. Cuantos más datos, mejor ajuste.</small>
           </div>
         </details>
@@ -332,9 +291,10 @@ button:active{ transform:translateY(1px); }
     <div id="error" class="error"></div>
 
     <div class="note">
-      Ajuste interno calibrado con tu referencia:
-      <span class="codepill">BAM 3:15 → U1 4:30–4:35</span> y
-      <span class="codepill">U2 3:33–3:35</span>.
+      Calibración usada:
+      <span class="pill">BAM 3:15 → U1 4:30–4:35</span>
+      y <span class="pill">U2 3:33–3:35</span>.
+      Zona 1 se define como <span class="pill">&lt; 60% de BAM</span>.
     </div>
   </div>
 
@@ -345,7 +305,11 @@ button:active{ transform:translateY(1px); }
     </div>
 
     <div id="results" class="results">
-      <div class="muted">Rellena uno o varios tiempos y pulsa “Calcular”.</div>
+      <div class="box">
+        <span>Estado</span>
+        <strong>Rellena uno o varios tiempos y pulsa “Calcular”.</strong>
+        <em>Cuantos más campos, mejor extrapolación.</em>
+      </div>
     </div>
   </div>
 
@@ -355,13 +319,57 @@ button:active{ transform:translateY(1px); }
 </div>
 
 <script>
-// ==============================
-// Parsing / formatting
-// ==============================
+// ------------------------------
+// Logo handling: try multiple paths + file upload
+// ------------------------------
+let logoTryStep = 0;
+function tryAltLogo(){
+  const img = document.getElementById("logoImg");
+  const fallback = document.getElementById("logoFallback");
+
+  // Try common alternatives for GitHub Pages
+  const candidates = [
+    "./jrunlab.png",
+    "./assets/jrunlab.png",
+    "./JRUNLAB.png",
+    "./assets/JRUNLAB.png"
+  ];
+
+  if(logoTryStep < candidates.length){
+    img.src = candidates[logoTryStep++];
+    return;
+  }
+
+  // If all fail, show fallback text
+  img.style.display = "none";
+  fallback.style.display = "block";
+}
+
+document.getElementById("logoFile").addEventListener("change", (e) => {
+  const file = e.target.files?.[0];
+  if(!file) return;
+  const img = document.getElementById("logoImg");
+  const fallback = document.getElementById("logoFallback");
+  const reader = new FileReader();
+  reader.onload = () => {
+    img.src = reader.result;
+    img.style.display = "block";
+    fallback.style.display = "none";
+  };
+  reader.readAsDataURL(file);
+});
+
+// ------------------------------
+// Helpers
+// ------------------------------
 function parseTimeToSeconds(str){
   const s = (str || "").trim();
   if(!s) return null;
-  const parts = s.split(":").map(p => p.trim());
+
+  // allow "3 35" -> "3:35"
+  const normalized = s.replace(/\s+/g, ":");
+
+  const parts = normalized.split(":").map(p => p.trim());
   if(parts.length < 2 || parts.length > 3) return null;
   if(parts.some(p => p === "" || isNaN(Number(p)))) return null;
 
@@ -371,6 +379,7 @@ function parseTimeToSeconds(str){
     if(mm < 0 || ss < 0 || ss >= 60) return null;
     return mm*60 + ss;
   }
+
   const hh = Number(parts[0]);
   const mm = Number(parts[1]);
   const ss = Number(parts[2]);
@@ -397,6 +406,7 @@ function clearError(){
   el.style.display = "none";
   el.textContent = "";
 }
+
 function box(title, pace, extra){
   return `
     <div class="box">
@@ -407,11 +417,9 @@ function box(title, pace, extra){
   `;
 }
 
-// ==============================
-// Estimación de BAM desde marca
-// Usamos modelo tipo VDOT/Daniels para derivar una velocidad "máxima aeróbica" y la usamos como BAM estimada.
-// Después aplicamos ratios calibrados a tu ancla (BAM 3:15 → U1 4:30-4:35 y U2 3:33-3:35).
-// ==============================
+// ------------------------------
+// VDOT/Daniels-like estimation -> BAM speed
+// ------------------------------
 function vo2FromV_mMin(v){
   return -4.60 + 0.182258*v + 0.000104*v*v;
 }
@@ -426,7 +434,7 @@ function computeVDOT(distanceM, timeSec){
   return vo2 / pct;
 }
 function solveSpeedFromVDOT(vdot){
-  // solve: 0.000104 v^2 + 0.182258 v + (-4.60 - vdot) = 0  where v is m/min
+  // 0.000104 v^2 + 0.182258 v + (-4.60 - vdot) = 0  (v in m/min)
   const a = 0.000104;
   const b = 0.182258;
   const c = -4.60 - vdot;
@@ -439,27 +447,25 @@ function solveSpeedFromVDOT(vdot){
   return v_mMin/60; // m/s
 }
 
-// ==============================
-// Calibración por tu referencia:
-// BAM 3:15 (195s/km) -> U1 4:30-4:35 (270-275s/km) -> ratio velocidad ≈ 0.709 - 0.722
-// BAM 3:15 -> U2 3:33-3:35 (213-215s/km) -> ratio velocidad ≈ 0.907 - 0.915
-// Elegimos el centro para el cálculo, y mostramos rangos.
-// ==============================
-const U1_RATIO_CENTER = 0.716; // ~71.6% de BAM (velocidad)
-const U2_RATIO_CENTER = 0.911; // ~91.1% de BAM (velocidad)
+// ------------------------------
+// Calibration from your anchor:
+// BAM 3:15 -> U1 4:30-4:35, U2 3:33-3:35
+// Use velocity ratios (not pace ratios)
+// ------------------------------
+const U1_RATIO_CENTER = 0.716; // ~71.6% of BAM speed
+const U2_RATIO_CENTER = 0.911; // ~91.1% of BAM speed
 
 const U1_RATIO_MIN = 0.709;
 const U1_RATIO_MAX = 0.722;
-
 const U2_RATIO_MIN = 0.907;
 const U2_RATIO_MAX = 0.915;
 
-// Zona 1: < 60% de U1 (como pediste originalmente)
-const Z1_OF_U1 = 0.60;
+// Zone 1 definition FIXED: < 60% of BAM speed
+const Z1_OF_BAM = 0.60;
 
-// ==============================
-// Inputs: se pueden rellenar varios. Promedio ponderado para BAM.
-// ==============================
+// ------------------------------
+// Inputs: user can fill multiple -> weighted avg for stability
+// ------------------------------
 const tests = [
   { id:"t1k",  name:"1 km",          d:1000,    w:1 },
   { id:"t2k",  name:"2 km",          d:2000,    w:2 },
@@ -485,55 +491,6 @@ function calculate(){
     return;
   }
 
-  // Compute BAM speed for each filled (via VDOT->speed)
   const computed = [];
   for(const f of filled){
-    const vdot = computeVDOT(f.d, f.sec);
-    const bamSpeed = solveSpeedFromVDOT(vdot);
-    if(!bamSpeed){
-      showError("No se pudo extrapolar BAM con los datos introducidos.");
-      return;
-    }
-    computed.push({ ...f, vdot, bamSpeed });
-  }
-
-  // Weighted average BAM speed
-  let wSum = 0, bamSum = 0;
-  computed.forEach(x => { wSum += x.w; bamSum += x.bamSpeed * x.w; });
-  const BAM = bamSum / wSum; // m/s
-
-  // Thresholds by calibrated ratios (speed-based)
-  const U1 = BAM * U1_RATIO_CENTER;
-  const U2 = BAM * U2_RATIO_CENTER;
-
-  // Ranges to show (based on min/max ratio)
-  const U1_min = BAM * U1_RATIO_MIN;
-  const U1_max = BAM * U1_RATIO_MAX;
-  const U2_min = BAM * U2_RATIO_MIN;
-  const U2_max = BAM * U2_RATIO_MAX;
-
-  // Zones
-  const Z1_limit = U1 * Z1_OF_U1;
-
-  // UI badges
-  const usedNames = computed.map(x => x.name).join(" + ");
-  const badge = document.getElementById("usedBadge");
-  badge.textContent = computed.length === 1
-    ? `Extrapolación desde: ${usedNames}`
-    : `Extrapolación (mejorada) desde: ${usedNames}`;
-
-  // Render results
-  const res = document.getElementById("results");
-  res.innerHTML = `
-    ${box(
-      "Zona 1 · < 60% de U1",
-      paceFromSpeed(Z1_limit),
-      speedToKmh(Z1_limit)
-    )}
-    ${box(
-      "Umbral 1 (U1) · calibrado desde BAM",
-      paceFromSpeed(U1),
-      `Rango: ${paceFromSpeed(U1_max)} – ${paceFromSpeed(U1_min)}`
-    )}
-    ${box(
-      "
+    const vdot = computeV
