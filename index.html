@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JRUN · Calculadora VAM y Zonas</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JRUN · Calculadora BAM y Zonas</title>
 
 <style>
 :root{
@@ -13,6 +13,7 @@
   --muted:#a7b0ba;
   --line:#1f242b;
   --accent:#f39a17;
+  --steel:#93a3ad;
 }
 
 *{box-sizing:border-box}
@@ -24,7 +25,7 @@ body{
 }
 
 .container{
-  max-width:900px;
+  max-width:980px;
   margin:0 auto;
   padding:30px 16px 50px;
 }
@@ -32,60 +33,131 @@ body{
 .header{
   display:flex;
   justify-content:center;
-  margin-bottom:20px;
+  margin-bottom:14px;
 }
-
 .logo{
-  height:80px;
+  height:78px;
   width:auto;
+  display:block;
+  filter:drop-shadow(0 10px 22px rgba(0,0,0,.5));
 }
+.logoFallback{
+  display:none;
+  font-weight:900;
+  letter-spacing:1px;
+  font-size:34px;
+}
+.logoFallback b{ color:var(--accent); }
 
 h1{
   text-align:center;
   margin:0 0 10px;
+  letter-spacing:.2px;
 }
-
 .info{
   text-align:center;
   color:var(--muted);
-  margin-bottom:25px;
+  margin:0 auto 22px;
+  max-width:820px;
+  line-height:1.45;
 }
 
 .card{
-  background:var(--card);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
   border:1px solid var(--line);
   border-radius:16px;
-  padding:20px;
-  margin-bottom:20px;
+  padding:18px;
+  margin-bottom:14px;
+  box-shadow:0 16px 50px rgba(0,0,0,.35);
 }
 
-.form{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
+.grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:14px;
+}
+@media (max-width:860px){
+  .grid{ grid-template-columns:1fr; }
 }
 
 label{
-  font-weight:700;
-  font-size:14px;
+  font-weight:800;
+  font-size:13px;
+  letter-spacing:.2px;
 }
+small{ color:var(--muted); line-height:1.35 }
 
-input, select{
+input{
   padding:12px;
-  border-radius:10px;
+  border-radius:12px;
   border:1px solid var(--line);
   background:#0b0d10;
   color:var(--text);
+  outline:none;
+  font-size:14px;
+}
+input:focus{
+  border-color:rgba(243,154,23,.7);
+  box-shadow:0 0 0 4px rgba(243,154,23,.12);
 }
 
+.inputs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+@media (max-width:560px){
+  .inputs{ grid-template-columns:1fr; }
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+}
 button{
+  flex:1;
   padding:14px;
   border:none;
   border-radius:12px;
-  font-weight:800;
+  font-weight:900;
   cursor:pointer;
   background:linear-gradient(180deg, #ffb347 0%, var(--accent) 70%);
   color:#000;
+}
+button.ghost{
+  background:transparent;
+  border:1px solid var(--line);
+  color:var(--text);
+}
+button:active{ transform:translateY(1px); }
+
+.error{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,70,70,.35);
+  background:rgba(255,70,70,.10);
+  color:#ffd0d0;
+  display:none;
+}
+
+.resultsHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:12px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+.badge{
+  border:1px solid rgba(147,163,173,.25);
+  background:rgba(147,163,173,.10);
+  color:#d5dde5;
+  padding:8px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
 }
 
 .results{
@@ -93,168 +165,320 @@ button{
   grid-template-columns:1fr 1fr;
   gap:12px;
 }
-
-@media(max-width:700px){
-  .results{grid-template-columns:1fr;}
+@media (max-width:680px){
+  .results{ grid-template-columns:1fr; }
 }
 
 .box{
   border:1px solid var(--line);
-  border-radius:12px;
+  border-radius:14px;
   padding:14px;
-  background:#111418;
+  background:rgba(0,0,0,.18);
 }
-
 .box span{
   display:block;
-  font-size:13px;
+  font-size:12px;
   color:var(--muted);
+  font-weight:800;
+  letter-spacing:.2px;
 }
-
 .box strong{
   display:block;
   font-size:18px;
   margin-top:6px;
+  font-weight:950;
+}
+.box em{
+  display:block;
+  margin-top:6px;
+  color:var(--steel);
+  font-style:normal;
+  font-weight:800;
+  font-size:13px;
 }
 
 .cta{
   display:block;
   text-align:center;
   text-decoration:none;
-  margin-top:20px;
+  margin-top:16px;
   padding:16px;
   border-radius:14px;
-  font-weight:900;
+  font-weight:950;
   background:linear-gradient(180deg, #ffb347 0%, var(--accent) 70%);
   color:#000;
+  box-shadow:0 10px 26px rgba(243,154,23,.18);
 }
 
-.error{
-  color:#ff8080;
-  margin-top:10px;
+.muted{
+  color:var(--muted);
+  font-weight:700;
+}
+.hr{
+  height:1px;
+  background:rgba(255,255,255,.06);
+  margin:12px 0;
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
   <div class="header">
-    <img src="logo.png" class="logo" alt="JRUN Logo">
+    <!-- Si tu archivo no se llama logo.png, cambia aquí el src -->
+    <img src="logo.png" class="logo" alt="JRUN Logo"
+         onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='block';" />
+    <div id="logoFallback" class="logoFallback">J<b>RUN</b></div>
   </div>
 
-  <h1>Calculadora de Ritmos y Zonas</h1>
+  <h1>Calculadora de BAM y Zonas</h1>
 
   <p class="info">
     Se está utilizando un modelo de tres zonas de entrenamiento.
-    Es el más práctico y el más correcto.
+    Es el más práctico y el más correcto para optimizar el rendimiento.
   </p>
 
   <div class="card">
-    <div class="form">
-      <label>Distancia</label>
-      <select id="distance">
-        <option value="1000">1 km</option>
-        <option value="2000">2 km</option>
-        <option value="5000">5 km</option>
-        <option value="10000">10 km</option>
-        <option value="21097">Media maratón</option>
-      </select>
+    <label>Introduce tu(s) tiempo(s). Puedes rellenar UNO o VARIOS. Formato mm:ss o hh:mm:ss.</label>
+    <div class="hr"></div>
 
-      <label>Tiempo (mm:ss o hh:mm:ss)</label>
-      <input type="text" id="time" placeholder="Ej: 18:45 o 1:29:30">
-
-      <button onclick="calculate()">Calcular</button>
-
-      <div id="error" class="error"></div>
+    <div class="inputs">
+      <div>
+        <label>1 km</label>
+        <input id="t1k" placeholder="Ej: 3:45" />
+        <small>Menos fiable para extrapolar, pero válido.</small>
+      </div>
+      <div>
+        <label>2 km</label>
+        <input id="t2k" placeholder="Ej: 7:50" />
+        <small>Útil si no tienes 5/10K.</small>
+      </div>
+      <div>
+        <label>5 km</label>
+        <input id="t5k" placeholder="Ej: 18:45" />
+        <small>Muy buena referencia.</small>
+      </div>
+      <div>
+        <label>10 km</label>
+        <input id="t10k" placeholder="Ej: 39:30" />
+        <small>Muy buena referencia.</small>
+      </div>
+      <div style="grid-column:1/-1;">
+        <label>Media maratón (21,0975 km)</label>
+        <input id="thm" placeholder="Ej: 1:29:30" />
+        <small>Fiable para estimar perfil aeróbico.</small>
+      </div>
     </div>
+
+    <div class="actions">
+      <button id="calcBtn">Calcular</button>
+      <button id="resetBtn" class="ghost">Reset</button>
+    </div>
+
+    <div id="error" class="error"></div>
   </div>
 
   <div class="card">
-    <div id="results" class="results"></div>
+    <div class="resultsHeader">
+      <h2 style="margin:0;">Resultados</h2>
+      <div id="usedBadge" class="badge">Sin cálculo todavía</div>
+    </div>
+
+    <div id="results" class="results">
+      <div class="muted">Rellena al menos un tiempo y pulsa “Calcular”.</div>
+    </div>
   </div>
 
-  <a class="cta"
-     href="https://wa.link/ds6qw3"
-     target="_blank">
-     Quiero mejorar mi rendimiento con una planificación individualizada
+  <a class="cta" href="https://wa.link/ds6qw3" target="_blank" rel="noopener">
+    Quiero mejorar mi rendimiento con una planificación individualizada
   </a>
 
 </div>
 
 <script>
-function parseTimeToSeconds(time){
-  const parts = time.split(":").map(Number);
+// ==============================
+// Helpers
+// ==============================
+function parseTimeToSeconds(str){
+  const s = (str || "").trim();
+  if(!s) return null;
+  const parts = s.split(":").map(p => p.trim());
+  if(parts.length < 2 || parts.length > 3) return null;
+  if(parts.some(p => p === "" || isNaN(Number(p)))) return null;
+
   if(parts.length === 2){
-    return parts[0]*60 + parts[1];
+    const mm = Number(parts[0]);
+    const ss = Number(parts[1]);
+    if(mm < 0 || ss < 0 || ss >= 60) return null;
+    return mm*60 + ss;
   }
-  if(parts.length === 3){
-    return parts[0]*3600 + parts[1]*60 + parts[2];
-  }
-  return null;
+  const hh = Number(parts[0]);
+  const mm = Number(parts[1]);
+  const ss = Number(parts[2]);
+  if(hh < 0 || mm < 0 || ss < 0 || mm >= 60 || ss >= 60) return null;
+  return hh*3600 + mm*60 + ss;
 }
 
-function formatPace(seconds){
-  const min = Math.floor(seconds/60);
-  const sec = Math.round(seconds%60);
-  return min + ":" + (sec<10?"0":"") + sec + "/km";
+function formatPace(secPerKm){
+  if(!isFinite(secPerKm) || secPerKm <= 0) return "—";
+  const m = Math.floor(secPerKm/60);
+  const s = Math.round(secPerKm - m*60);
+  return `${m}:${String(s).padStart(2,"0")}/km`;
 }
+
+function speedToKmh(speedMs){
+  return (speedMs*3.6).toFixed(2) + " km/h";
+}
+
+function paceFromSpeed(speedMs){
+  return formatPace(1000 / speedMs);
+}
+
+function showError(msg){
+  const el = document.getElementById("error");
+  el.style.display = "block";
+  el.textContent = msg;
+}
+function clearError(){
+  const el = document.getElementById("error");
+  el.style.display = "none";
+  el.textContent = "";
+}
+
+function box(title, pace, extra){
+  return `
+    <div class="box">
+      <span>${title}</span>
+      <strong>${pace}</strong>
+      ${extra ? `<em>${extra}</em>` : ``}
+    </div>
+  `;
+}
+
+// ==============================
+// VAM / VDOT model (Daniels-like)
+// ==============================
+// Given velocity v (m/min) and time t (min):
+// VO2 = -4.60 + 0.182258*v + 0.000104*v^2
+// percent = 0.8 + 0.1894393*e^(-0.012778*t) + 0.2989558*e^(-0.1932605*t)
+// VDOT = VO2 / percent
+// Then solve VO2(v) = VDOT for v -> yields v at VO2max -> VAM speed.
+function vo2FromV_mMin(v){
+  return -4.60 + 0.182258*v + 0.000104*v*v;
+}
+function percentFromT_min(t){
+  return 0.8 + 0.1894393*Math.exp(-0.012778*t) + 0.2989558*Math.exp(-0.1932605*t);
+}
+function computeVDOT(distanceM, timeSec){
+  const tMin = timeSec/60;
+  const v_mMin = (distanceM/timeSec)*60;
+  const vo2 = vo2FromV_mMin(v_mMin);
+  const pct = percentFromT_min(tMin);
+  const vdot = vo2 / pct;
+  return { vdot };
+}
+function solveVAM_fromVDOT(vdot){
+  // 0.000104 v^2 + 0.182258 v + (-4.60 - vdot) = 0
+  const a = 0.000104;
+  const b = 0.182258;
+  const c = -4.60 - vdot;
+  const disc = b*b - 4*a*c;
+  if(disc < 0) return null;
+  const v1 = (-b + Math.sqrt(disc)) / (2*a);
+  const v2 = (-b - Math.sqrt(disc)) / (2*a);
+  const v_mMin = Math.max(v1, v2);
+  if(!isFinite(v_mMin) || v_mMin <= 0) return null;
+  return v_mMin/60; // m/s
+}
+
+// ==============================
+// Main logic
+// ==============================
+const tests = [
+  { key:"t1k",  name:"1 km",          d:1000,    weight:1 },
+  { key:"t2k",  name:"2 km",          d:2000,    weight:2 },
+  { key:"t5k",  name:"5 km",          d:5000,    weight:3 },
+  { key:"t10k", name:"10 km",         d:10000,   weight:3 },
+  { key:"thm",  name:"Media maratón", d:21097.5, weight:2 },
+];
 
 function calculate(){
-  const distance = parseFloat(document.getElementById("distance").value);
-  const timeStr = document.getElementById("time").value;
-  const error = document.getElementById("error");
-  const results = document.getElementById("results");
+  clearError();
 
-  error.textContent="";
-  results.innerHTML="";
+  // collect filled tests
+  const filled = [];
+  for(const t of tests){
+    const sec = parseTimeToSeconds(document.getElementById(t.key).value);
+    if(sec !== null){
+      if(sec <= 0) continue;
+      filled.push({ ...t, sec });
+    }
+  }
 
-  const totalSec = parseTimeToSeconds(timeStr);
-  if(!totalSec){
-    error.textContent="Formato de tiempo incorrecto.";
+  if(filled.length === 0){
+    showError("Rellena al menos UN tiempo (formato mm:ss o hh:mm:ss).");
     return;
   }
 
-  // Velocidad media prueba (m/s)
-  const speed = distance / totalSec;
-
-  // Modelo tipo Daniels simplificado para estimar VAM
-  const v_m_min = speed * 60;
-  const vo2 = -4.6 + 0.182258*v_m_min + 0.000104*v_m_min*v_m_min;
-  const percent = 0.8 + 0.1894393*Math.exp(-0.012778*(totalSec/60)) +
-                  0.2989558*Math.exp(-0.1932605*(totalSec/60));
-  const VDOT = vo2/percent;
-
-  const a=0.000104;
-  const b=0.182258;
-  const c=-4.6-VDOT;
-  const disc=b*b-4*a*c;
-  const vam_m_min=(-b+Math.sqrt(disc))/(2*a);
-  const vam=vam_m_min/60; // m/s
-
-  // Umbrales
-  const u1 = vam*0.66;
-  const u2 = vam*0.83;
-
-  const z1 = u1*0.60;
-
-  function box(title, speed){
-    return `
-      <div class="box">
-        <span>${title}</span>
-        <strong>${formatPace(1000/speed)}</strong>
-      </div>
-    `;
+  // compute VAM for each filled entry
+  const computed = [];
+  for(const f of filled){
+    const { vdot } = computeVDOT(f.d, f.sec);
+    const vam = solveVAM_fromVDOT(vdot);
+    if(!vam){
+      showError("No se pudo estimar la VAM con los datos introducidos.");
+      return;
+    }
+    computed.push({ ...f, vdot, vam });
   }
 
-  results.innerHTML += box("Zona 1 (<60% U1)", z1);
-  results.innerHTML += box("Umbral 1 (66% VAM)", u1);
-  results.innerHTML += box("Zona 2 (entre U1 y U2)", (u1+u2)/2);
-  results.innerHTML += box("Umbral 2 (83% VAM)", u2);
-  results.innerHTML += box("Zona 3 (entre U2 y VAM)", (u2+vam)/2);
-  results.innerHTML += box("VAM", vam);
+  // Weighted average VAM (more stable if multiple inputs)
+  let wSum = 0;
+  let vamSum = 0;
+  computed.forEach(x => { wSum += x.weight; vamSum += x.vam * x.weight; });
+  const VAM = vamSum / wSum;
+
+  // Define BAM as pace at VAM (your BAM is the reference intensity; here BAM speed == VAM speed)
+  const BAM_speed = VAM;
+
+  // Thresholds based on speed
+  const U1 = BAM_speed * 0.66;
+  const U2 = BAM_speed * 0.83;
+
+  // Zones (as you defined)
+  const Z1_limit = U1 * 0.60;         // Zona 1: < 60% del U1
+  const Z2_mid = (U1 + U2) / 2;       // display as representative pace
+  const Z3_mid = (U2 + BAM_speed) / 2;
+
+  // UI: show which tests were used
+  const usedNames = computed.map(x => x.name).join(" + ");
+  const badge = document.getElementById("usedBadge");
+  badge.textContent = computed.length === 1
+    ? `Cálculo desde: ${usedNames}`
+    : `Cálculo ponderado desde: ${usedNames}`;
+
+  // Render results
+  const res = document.getElementById("results");
+  res.innerHTML = `
+    ${box("Zona 1 · < 60% de U1", paceFromSpeed(Z1_limit), speedToKmh(Z1_limit))}
+    ${box("Umbral 1 (U1) · 66% de BAM", paceFromSpeed(U1), speedToKmh(U1))}
+    ${box("Zona 2 · entre U1 y U2", paceFromSpeed(Z2_mid), "Rango: " + paceFromSpeed(U1) + " → " + paceFromSpeed(U2))}
+    ${box("Umbral 2 (U2) · 83% de BAM", paceFromSpeed(U2), speedToKmh(U2))}
+    ${box("Zona 3 · entre U2 y BAM", paceFromSpeed(Z3_mid), "Rango: " + paceFromSpeed(U2) + " → " + paceFromSpeed(BAM_speed))}
+    ${box("BAM (derivada de VAM)", paceFromSpeed(BAM_speed), "VAM: " + speedToKmh(VAM))}
+  `;
 }
+
+function resetAll(){
+  clearError();
+  tests.forEach(t => document.getElementById(t.key).value = "");
+  document.getElementById("usedBadge").textContent = "Sin cálculo todavía";
+  document.getElementById("results").innerHTML = `<div class="muted">Rellena al menos un tiempo y pulsa “Calcular”.</div>`;
+}
+
+document.getElementById("calcBtn").addEventListener("click", calculate);
+document.getElementById("resetBtn").addEventListener("click", resetAll);
 </script>
 
 </body>
