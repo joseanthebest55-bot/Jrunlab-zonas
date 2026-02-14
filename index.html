@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>JRUN · Calculadora BAM y Zonas</title>
+<title>JRUN · Calculadora VAM y Zonas</title>
 
 <style>
 :root{
@@ -25,7 +25,7 @@ body{
 }
 .container{max-width:1020px; margin:0 auto; padding:0 16px 44px;}
 
-/* Header tipo tu captura: bloque arriba, centrado, con logo grande */
+/* Header tipo tu captura */
 .headerBar{
   width:100%;
   background:linear-gradient(180deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,0) 100%);
@@ -41,7 +41,7 @@ body{
   align-items:center;
 }
 .logo{
-  height:120px; /* MÁS GRANDE */
+  height:120px;
   width:auto;
   display:block;
   filter:drop-shadow(0 12px 26px rgba(0,0,0,.55));
@@ -191,16 +191,11 @@ button:active{transform:translateY(1px);}
   box-shadow:0 10px 26px rgba(243,154,23,.18);
 }
 
-.note{margin-top:10px; color:var(--muted); line-height:1.4; font-weight:800;}
-.pill{
-  display:inline-block;
-  padding:3px 8px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.05);
-  color:#dfe6ee;
-  font-weight:1000;
-  font-size:12px;
+.note{
+  margin-top:10px;
+  color:var(--muted);
+  line-height:1.4;
+  font-weight:900;
 }
 </style>
 </head>
@@ -217,7 +212,7 @@ button:active{transform:translateY(1px);}
 
 <div class="container">
 
-  <h1>Calculadora de BAM y Zonas</h1>
+  <h1>Calculadora de VAM y Zonas</h1>
 
   <p class="info">
     Se está utilizando un modelo de tres zonas de entrenamiento.
@@ -291,13 +286,7 @@ button:active{transform:translateY(1px);}
 
     <div id="error" class="error"></div>
 
-    <div class="note">
-      Calibración usada:
-      <span class="pill">BAM 3:15 → U1 4:30–4:35</span>
-      y <span class="pill">U2 3:33–3:35</span>.
-      Zona 1 se define como <span class="pill">&lt; 60% de BAM</span>.
-      (Estimación interna basada en modelo VDOT para aproximar la VAM y derivar la BAM.)
-    </div>
+    <div class="note">Modelo JRUNLAB</div>
   </div>
 
   <div class="card">
@@ -376,7 +365,7 @@ function box(title, pace, extra){
 }
 
 // ------------------------------
-// VDOT/Daniels-like estimation -> "VAM proxy" -> BAM speed
+// VDOT/Daniels-like estimation -> VAM (proxy)
 // ------------------------------
 function vo2FromV_mMin(v){
   return -4.60 + 0.182258*v + 0.000104*v*v;
@@ -405,8 +394,7 @@ function solveSpeedFromVDOT(vdot){
 }
 
 // ------------------------------
-// Calibración por tu ancla:
-// BAM 3:15 -> U1 4:30–4:35, U2 3:33–3:35
+// Calibración interna (sin mostrarla en UI)
 // Ratios en VELOCIDAD (no en ritmo)
 // ------------------------------
 const U1_RATIO_CENTER = 0.716;
@@ -416,8 +404,8 @@ const U1_RATIO_MAX = 0.722;
 const U2_RATIO_MIN = 0.907;
 const U2_RATIO_MAX = 0.915;
 
-// Zona 1: < 60% de BAM (corrige el error de los 9:xx/km)
-const Z1_OF_BAM = 0.60;
+// Zona 1: < 60% de VAM
+const Z1_OF_VAM = 0.60;
 
 // Inputs: se pueden rellenar varios -> promedio ponderado
 const tests = [
@@ -448,40 +436,40 @@ function calculate(){
   const computed = [];
   for(const f of filled){
     const vdot = computeVDOT(f.d, f.sec);
-    const bamSpeed = solveSpeedFromVDOT(vdot); // proxy VAM -> usado para BAM estimada
-    if(!bamSpeed){
-      showError("No se pudo extrapolar la BAM con los datos introducidos.");
+    const vamSpeed = solveSpeedFromVDOT(vdot);
+    if(!vamSpeed){
+      showError("No se pudo estimar la VAM con los datos introducidos.");
       return;
     }
-    computed.push({ ...f, vdot, bamSpeed });
+    computed.push({ ...f, vdot, vamSpeed });
   }
 
-  let wSum = 0, bamSum = 0;
-  computed.forEach(x => { wSum += x.w; bamSum += x.bamSpeed * x.w; });
-  const BAM = bamSum / wSum; // m/s
+  let wSum = 0, vamSum = 0;
+  computed.forEach(x => { wSum += x.w; vamSum += x.vamSpeed * x.w; });
+  const VAM = vamSum / wSum; // m/s
 
-  const U1 = BAM * U1_RATIO_CENTER;
-  const U2 = BAM * U2_RATIO_CENTER;
+  const U1 = VAM * U1_RATIO_CENTER;
+  const U2 = VAM * U2_RATIO_CENTER;
 
-  const U1_min = BAM * U1_RATIO_MIN;
-  const U1_max = BAM * U1_RATIO_MAX;
-  const U2_min = BAM * U2_RATIO_MIN;
-  const U2_max = BAM * U2_RATIO_MAX;
+  const U1_min = VAM * U1_RATIO_MIN;
+  const U1_max = VAM * U1_RATIO_MAX;
+  const U2_min = VAM * U2_RATIO_MIN;
+  const U2_max = VAM * U2_RATIO_MAX;
 
-  const Z1_limit = BAM * Z1_OF_BAM;
+  const Z1_limit = VAM * Z1_OF_VAM;
 
   const usedNames = computed.map(x => x.name).join(" + ");
   document.getElementById("usedBadge").textContent =
-    computed.length === 1 ? `Extrapolación desde: ${usedNames}` : `Extrapolación mejorada desde: ${usedNames}`;
+    computed.length === 1 ? `Estimación desde: ${usedNames}` : `Estimación mejorada desde: ${usedNames}`;
 
   const res = document.getElementById("results");
   res.innerHTML = `
-    ${box("Zona 1 · < 60% de BAM", paceFromSpeed(Z1_limit), speedToKmh(Z1_limit))}
-    ${box("Umbral 1 (U1) · calibrado desde BAM", paceFromSpeed(U1), `Rango aprox: ${paceFromSpeed(U1_max)} – ${paceFromSpeed(U1_min)}`)}
+    ${box("Zona 1 · < 60% de VAM", paceFromSpeed(Z1_limit), speedToKmh(Z1_limit))}
+    ${box("Umbral 1 (U1)", paceFromSpeed(U1), `Rango aprox: ${paceFromSpeed(U1_max)} – ${paceFromSpeed(U1_min)}`)}
     ${box("Zona 2 · entre U1 y U2", `${paceFromSpeed(U1_max)} → ${paceFromSpeed(U2_min)}`, "Rango recomendado")}
-    ${box("Umbral 2 (U2) · calibrado desde BAM", paceFromSpeed(U2), `Rango aprox: ${paceFromSpeed(U2_max)} – ${paceFromSpeed(U2_min)}`)}
-    ${box("Zona 3 · entre U2 y BAM", `${paceFromSpeed(U2_max)} → ${paceFromSpeed(BAM)}`, "Rango recomendado")}
-    ${box("BAM (estimada) · referencia VAM", paceFromSpeed(BAM), `${speedToKmh(BAM)} · VAM (proxy)`)}
+    ${box("Umbral 2 (U2)", paceFromSpeed(U2), `Rango aprox: ${paceFromSpeed(U2_max)} – ${paceFromSpeed(U2_min)}`)}
+    ${box("Zona 3 · entre U2 y VAM", `${paceFromSpeed(U2_max)} → ${paceFromSpeed(VAM)}`, "Rango recomendado")}
+    ${box("VAM (Velocidad Aeróbica Máxima)", paceFromSpeed(VAM), speedToKmh(VAM))}
   `;
 }
 
