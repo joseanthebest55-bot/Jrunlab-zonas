@@ -1,208 +1,113 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>JRUN LAB - Modelo de Zonas</title>
+import React from "react";
 
-<style>
+export default function Modelo3Zonas() {
+  const [vamInput, setVamInput] = React.useState("");
+  const [resultados, setResultados] = React.useState(null);
 
-body{
-  background:#000;
-  color:#fff;
-  font-family:Arial, Helvetica, sans-serif;
-  text-align:center;
-  padding:40px;
+  // Convertir mm:ss a segundos
+  const paceToSeconds = (pace) => {
+    const [min, sec] = pace.split(":").map(Number);
+    return min * 60 + sec;
+  };
+
+  // Convertir segundos a mm:ss
+  const secondsToPace = (totalSeconds) => {
+    const min = Math.floor(totalSeconds / 60);
+    const sec = Math.round(totalSeconds % 60);
+    return `${min}:${sec.toString().padStart(2, "0")}`;
+  };
+
+  const calcularZonas = () => {
+    if (!vamInput.includes(":")) return;
+
+    const vamSeg = paceToSeconds(vamInput);
+
+    // PORCENTAJES DEFINIDOS POR EL USUARIO
+    const pctZ1 = 0.65;   // Zona 1 < 65%
+    const pctU1 = 0.66;   // Umbral 1 ≈ 66%
+    const pctU2 = 0.83;   // Umbral 2 ≈ 83%
+
+    const ritmoU1 = vamSeg / pctU1;
+    const ritmoU2 = vamSeg / pctU2;
+    const ritmoZ1 = vamSeg / pctZ1;
+
+    setResultados({
+      zona1: `< ${secondsToPace(ritmoZ1)}`,
+      umbral1: secondsToPace(ritmoU1),
+      zona2: `${secondsToPace(ritmoU1)} - ${secondsToPace(ritmoU2)}`,
+      umbral2: secondsToPace(ritmoU2),
+      zona3: `${secondsToPace(ritmoU2)} - ${vamInput}`,
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
+      <div className="max-w-2xl w-full bg-white shadow-xl rounded-2xl p-8 space-y-6">
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-bold">Modelo de 3 Zonas basado en VAM</h1>
+          <p className="text-gray-600">Introduce tu VAM en formato min/km (ej: 3:15)</p>
+        </div>
+
+        <div className="flex gap-3">
+          <input
+            type="text"
+            placeholder="3:15"
+            value={vamInput}
+            onChange={(e) => setVamInput(e.target.value)}
+            className="flex-1 border rounded-xl p-3"
+          />
+          <button
+            onClick={calcularZonas}
+            className="bg-black text-white px-6 rounded-xl"
+          >
+            Calcular
+          </button>
+        </div>
+
+        {resultados && (
+          <div className="space-y-4 text-base">
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <h2 className="font-semibold">Zona 1</h2>
+              <p>Por debajo de {resultados.zona1} (65% VAM)</p>
+            </div>
+
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <h2 className="font-semibold">Umbral 1</h2>
+              <p>En torno a {resultados.umbral1} (66% VAM)</p>
+            </div>
+
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <h2 className="font-semibold">Zona 2</h2>
+              <p>Entre {resultados.zona2} (66% - 83% VAM)</p>
+            </div>
+
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <h2 className="font-semibold">Umbral 2</h2>
+              <p>En torno a {resultados.umbral2} (83% VAM)</p>
+            </div>
+
+            <div className="p-4 bg-gray-50 rounded-xl">
+              <h2 className="font-semibold">Zona 3</h2>
+              <p>Entre {resultados.zona3} (83% - 100% VAM)</p>
+            </div>
+
+            <div className="p-4 bg-blue-50 rounded-xl text-sm text-blue-900">
+              Se está utilizando un modelo de 3 zonas de entrenamiento, es el más práctico para trabajar.
+            </div>
+
+            <div className="pt-4">
+              <a
+                href="https://wa.link/ds6qw3"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center bg-black text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition"
+              >
+                Quiero mejorar mi rendimiento con una planificación individualizada y profesional
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
-
-.container{
-  max-width:700px;
-  margin:auto;
-}
-
-.logo{
-  width:250px;
-  margin-bottom:30px;
-}
-
-h1{
-  color:#ff7a00;
-  letter-spacing:2px;
-}
-
-.section{
-  background:#111;
-  padding:20px;
-  margin-top:20px;
-  border-left:4px solid #ff7a00;
-}
-
-.row{
-  display:flex;
-  gap:10px;
-  margin-bottom:10px;
-}
-
-.row input{
-  flex:1;
-  padding:10px;
-  background:#1c1c1c;
-  border:1px solid #333;
-  color:white;
-}
-
-button{
-  width:100%;
-  padding:15px;
-  margin-top:25px;
-  background:#ff7a00;
-  color:black;
-  font-weight:bold;
-  border:none;
-  cursor:pointer;
-  font-size:16px;
-}
-
-button:hover{
-  background:#ffa040;
-}
-
-.result{
-  margin-top:30px;
-  background:#111;
-  padding:25px;
-  border-left:4px solid #ff7a00;
-}
-
-.zone{
-  margin-top:15px;
-  color:#ff7a00;
-  font-weight:bold;
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<img src="jrunlab.png" class="logo">
-
-<h1>MODELO DE ZONAS JRUN LAB</h1>
-<p>Introduce uno o varios tiempos</p>
-
-<div class="section">
-
-<h3>1 km</h3>
-<div class="row">
-  <input type="number" id="t1m" placeholder="Minutos">
-  <input type="number" id="t1s" placeholder="Segundos">
-</div>
-
-<h3>2 km</h3>
-<div class="row">
-  <input type="number" id="t2m" placeholder="Minutos">
-  <input type="number" id="t2s" placeholder="Segundos">
-</div>
-
-<h3>5 km</h3>
-<div class="row">
-  <input type="number" id="t5m" placeholder="Minutos">
-  <input type="number" id="t5s" placeholder="Segundos">
-</div>
-
-<h3>10 km</h3>
-<div class="row">
-  <input type="number" id="t10m" placeholder="Minutos">
-  <input type="number" id="t10s" placeholder="Segundos">
-</div>
-
-<h3>Media Maratón (21.1 km)</h3>
-<div class="row">
-  <input type="number" id="t21m" placeholder="Minutos">
-  <input type="number" id="t21s" placeholder="Segundos">
-</div>
-
-<button onclick="calculate()">CALCULAR ZONAS</button>
-
-</div>
-
-<div class="result" id="output"></div>
-
-</div>
-
-<script>
-
-function paceFromSpeed(speed){
-  let pace = 60 / speed;
-  let min = Math.floor(pace);
-  let sec = Math.round((pace - min) * 60);
-  if(sec < 10){ sec = "0" + sec; }
-  return min + ":" + sec + " /km";
-}
-
-function getTime(minId, secId){
-  let m = parseFloat(document.getElementById(minId).value);
-  let s = parseFloat(document.getElementById(secId).value);
-
-  if(isNaN(m) && isNaN(s)) return null;
-  if(isNaN(m)) m = 0;
-  if(isNaN(s)) s = 0;
-
-  return m + (s/60);
-}
-
-function calculate(){
-
-  let tests = [
-    {dist:1,   time:getTime("t1m","t1s"),  pct:1.02, weight:1.0},
-    {dist:2,   time:getTime("t2m","t2s"),  pct:1.00, weight:1.2},
-    {dist:5,   time:getTime("t5m","t5s"),  pct:0.95, weight:1.0},
-    {dist:10,  time:getTime("t10m","t10s"), pct:0.90, weight:0.8},
-    {dist:21.1,time:getTime("t21m","t21s"), pct:0.85, weight:0.6}
-  ];
-
-  let vamSum = 0;
-  let weightSum = 0;
-
-  tests.forEach(t=>{
-    if(t.time !== null && t.time > 0){
-      let speed = t.dist / (t.time / 60);
-      let vamEstimate = speed / t.pct;
-      vamSum += vamEstimate * t.weight;
-      weightSum += t.weight;
-    }
-  });
-
-  if(weightSum === 0){
-    document.getElementById("output").innerHTML =
-      "<p>Introduce al menos un tiempo válido.</p>";
-    return;
-  }
-
-  let vam = vamSum / weightSum;
-
-  // ZONAS SOBRE VELOCIDAD
-  let z1 = vam * 0.60;
-  let z2 = vam * 0.80;
-
-  document.getElementById("output").innerHTML = `
-    <h2 style="color:#ff7a00;">RESULTADOS</h2>
-    <p><strong>VAM:</strong> ${vam.toFixed(2)} km/h (${paceFromSpeed(vam)})</p>
-    <hr style="border-color:#333;">
-
-    <div class="zone">ZONA 3 (80-100%)</div>
-    <p>${paceFromSpeed(z2)} - ${paceFromSpeed(vam)}</p>
-
-    <div class="zone">ZONA 2 (60-80%)</div>
-    <p>${paceFromSpeed(z1)} - ${paceFromSpeed(z2)}</p>
-
-    <div class="zone">ZONA 1 (<60%)</div>
-    <p>Más lento que ${paceFromSpeed(z1)}</p>
-  `;
-}
-
-</script>
-
-</body>
-</html>
