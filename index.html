@@ -394,15 +394,20 @@ function solveSpeedFromVDOT(vdot){
 }
 
 // ------------------------------
-// Calibración interna (sin mostrarla en UI)
-// Ratios en VELOCIDAD (no en ritmo)
+// ÚNICO CAMBIO: calibración nueva solicitada
+// Si VAM = 3:15 (195s/km) -> U1 = 4:30 (270s/km), U2 = 3:30 (210s/km)
+// Ratios en VELOCIDAD:
+// U1/VAM = 195/270 = 0.722222...
+// U2/VAM = 195/210 = 0.928571...
+// Mantengo la estructura igual, incluyendo “Rango aprox”,
+// pero ahora rango = mismo valor (min=max=centro).
 // ------------------------------
-const U1_RATIO_CENTER = 0.716;
-const U2_RATIO_CENTER = 0.911;
-const U1_RATIO_MIN = 0.709;
-const U1_RATIO_MAX = 0.722;
-const U2_RATIO_MIN = 0.907;
-const U2_RATIO_MAX = 0.915;
+const U1_RATIO_CENTER = 195/270; // 0.7222222222
+const U2_RATIO_CENTER = 195/210; // 0.9285714286
+const U1_RATIO_MIN = U1_RATIO_CENTER;
+const U1_RATIO_MAX = U1_RATIO_CENTER;
+const U2_RATIO_MIN = U2_RATIO_CENTER;
+const U2_RATIO_MAX = U2_RATIO_CENTER;
 
 // Zona 1: < 60% de VAM
 const Z1_OF_VAM = 0.60;
