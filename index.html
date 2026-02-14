@@ -1,113 +1,208 @@
-import React from "react";
-
-export default function Modelo3Zonas() {
-  const [vamInput, setVamInput] = React.useState("");
-  const [resultados, setResultados] = React.useState(null);
-
-  // Convertir mm:ss a segundos
-  const paceToSeconds = (pace) => {
-    const [min, sec] = pace.split(":").map(Number);
-    return min * 60 + sec;
-  };
-
-  // Convertir segundos a mm:ss
-  const secondsToPace = (totalSeconds) => {
-    const min = Math.floor(totalSeconds / 60);
-    const sec = Math.round(totalSeconds % 60);
-    return `${min}:${sec.toString().padStart(2, "0")}`;
-  };
-
-  const calcularZonas = () => {
-    if (!vamInput.includes(":")) return;
-
-    const vamSeg = paceToSeconds(vamInput);
-
-    // PORCENTAJES DEFINIDOS POR EL USUARIO
-    const pctZ1 = 0.65;   // Zona 1 < 65%
-    const pctU1 = 0.66;   // Umbral 1 ≈ 66%
-    const pctU2 = 0.83;   // Umbral 2 ≈ 83%
-
-    const ritmoU1 = vamSeg / pctU1;
-    const ritmoU2 = vamSeg / pctU2;
-    const ritmoZ1 = vamSeg / pctZ1;
-
-    setResultados({
-      zona1: `< ${secondsToPace(ritmoZ1)}`,
-      umbral1: secondsToPace(ritmoU1),
-      zona2: `${secondsToPace(ritmoU1)} - ${secondsToPace(ritmoU2)}`,
-      umbral2: secondsToPace(ritmoU2),
-      zona3: `${secondsToPace(ritmoU2)} - ${vamInput}`,
-    });
-  };
-
-  return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6">
-      <div className="max-w-2xl w-full bg-white shadow-xl rounded-2xl p-8 space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold">Modelo de 3 Zonas basado en VAM</h1>
-          <p className="text-gray-600">Introduce tu VAM en formato min/km (ej: 3:15)</p>
-        </div>
-
-        <div className="flex gap-3">
-          <input
-            type="text"
-            placeholder="3:15"
-            value={vamInput}
-            onChange={(e) => setVamInput(e.target.value)}
-            className="flex-1 border rounded-xl p-3"
-          />
-          <button
-            onClick={calcularZonas}
-            className="bg-black text-white px-6 rounded-xl"
-          >
-            Calcular
-          </button>
-        </div>
-
-        {resultados && (
-          <div className="space-y-4 text-base">
-            <div className="p-4 bg-gray-50 rounded-xl">
-              <h2 className="font-semibold">Zona 1</h2>
-              <p>Por debajo de {resultados.zona1} (65% VAM)</p>
-            </div>
-
-            <div className="p-4 bg-gray-50 rounded-xl">
-              <h2 className="font-semibold">Umbral 1</h2>
-              <p>En torno a {resultados.umbral1} (66% VAM)</p>
-            </div>
-
-            <div className="p-4 bg-gray-50 rounded-xl">
-              <h2 className="font-semibold">Zona 2</h2>
-              <p>Entre {resultados.zona2} (66% - 83% VAM)</p>
-            </div>
-
-            <div className="p-4 bg-gray-50 rounded-xl">
-              <h2 className="font-semibold">Umbral 2</h2>
-              <p>En torno a {resultados.umbral2} (83% VAM)</p>
-            </div>
-
-            <div className="p-4 bg-gray-50 rounded-xl">
-              <h2 className="font-semibold">Zona 3</h2>
-              <p>Entre {resultados.zona3} (83% - 100% VAM)</p>
-            </div>
-
-            <div className="p-4 bg-blue-50 rounded-xl text-sm text-blue-900">
-              Se está utilizando un modelo de 3 zonas de entrenamiento, es el más práctico para trabajar.
-            </div>
-
-            <div className="pt-4">
-              <a
-                href="https://wa.link/ds6qw3"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full text-center bg-black text-white py-3 rounded-2xl font-semibold hover:opacity-90 transition"
-              >
-                Quiero mejorar mi rendimiento con una planificación individualizada y profesional
-              </a>
-            </div>
-          </div>
-        )}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JRUN LAB - Modelo de Zonas</title>
+  <style>
+    :root{
+      --bg:#0b0b0d;
+      --panel:#121216;
+      --text:#f2f2f2;
+      --muted:#b8b8b8;
+      --accent:#f59e0b; /* naranja */
+      --line:rgba(255,255,255,.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      background: radial-gradient(1200px 600px at 50% -100px, rgba(245,158,11,.22), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .wrap{
+      width:min(860px, 100%);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), transparent 120px), var(--panel);
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      padding:26px;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:18px;
+    }
+    .logo{
+      width:150px;
+      height:auto;
+      display:block;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,.45));
+    }
+    h1{
+      margin:0;
+      font-size:22px;
+      letter-spacing:.3px;
+    }
+    .subtitle{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+      margin-top:10px;
+    }
+    .card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      background: rgba(255,255,255,.02);
+    }
+    label{
+      display:block;
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:8px;
+    }
+    input{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:#0f0f13;
+      color:var(--text);
+      padding:12px 14px;
+      font-size:16px;
+      outline:none;
+    }
+    input:focus{
+      border-color: rgba(245,158,11,.6);
+      box-shadow: 0 0 0 4px rgba(245,158,11,.15);
+    }
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .btn{
+      border:0;
+      background: linear-gradient(180deg, rgba(245,158,11,.95), rgba(245,158,11,.78));
+      color:#0a0a0a;
+      font-weight:800;
+      letter-spacing:.4px;
+      padding:12px 16px;
+      border-radius:16px;
+      cursor:pointer;
+      text-transform:uppercase;
+      box-shadow: 0 10px 24px rgba(245,158,11,.18);
+    }
+    .btn:hover{filter:brightness(1.05)}
+    .btn:active{transform: translateY(1px)}
+    .hint{
+      color:var(--muted);
+      font-size:13px;
+    }
+    .results{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      margin-top:14px;
+    }
+    .zone{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px;
+      background: rgba(255,255,255,.02);
+    }
+    .zone h3{
+      margin:0 0 6px 0;
+      font-size:15px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .pill{
+      font-size:12px;
+      color:#0a0a0a;
+      background: var(--accent);
+      padding:4px 10px;
+      border-radius:999px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .zone p{
+      margin:0;
+      color:var(--text);
+      font-size:14px;
+      line-height:1.35;
+    }
+    .comment{
+      margin-top:12px;
+      border-left:4px solid var(--accent);
+      background: rgba(245,158,11,.08);
+      padding:12px 14px;
+      border-radius:14px;
+      color:var(--text);
+      font-size:13px;
+    }
+    .wa{
+      margin-top:14px;
+      display:block;
+      text-align:center;
+      text-decoration:none;
+      color:var(--text);
+      font-weight:800;
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid rgba(245,158,11,.35);
+      background: rgba(0,0,0,.25);
+    }
+    .wa:hover{
+      background: rgba(245,158,11,.10);
+      border-color: rgba(245,158,11,.6);
+    }
+    .error{
+      margin-top:10px;
+      color:#ffd1d1;
+      font-size:13px;
+      display:none;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <img class="logo" src="https://joseanthebest55-bot.github.io/Jrunlab-zonas/jrunlab.png" alt="JRUN lab" />
+      <div>
+        <h1>MODELO DE ZONAS JRUN LAB</h1>
+        <p class="subtitle">Introduce tu VAM (min/km) para calcular zonas basadas en porcentajes extrapolados (U1 y U2).</p>
       </div>
-    </div>
-  );
-}
+    </header>
+
+    <section class="grid">
+      <div class="card">
+        <label for="vam">VAM (ritmo en min/km)</label>
+        <div class="row">
+          <input id="vam" inputmode="numeric" placeholder="Ej: 3:15" />
+          <button class="btn" id="calc">CALCULAR ZONAS</button>
+        </div>
+        <div class="hint">Formato: <b>m:ss</b> (ej. 3:15). Se calculan U1≈72.2% y U2≈91.6% (extrapolado del ejemplo 3:15 → 4:30 y 3:33).</div>
+        <div class="error" id="err">Introduce una VAM válida en formato m:ss (por ejemplo 3:15).</div>
+      </div>
+
+      <div class="card">
+        <div class="results" id="results" style="display:none;"></div>
+
+        <div class="comment" id="comment" style="display:none;">
+          Se está utilizando un modelo de 3 zonas de entrenamiento
