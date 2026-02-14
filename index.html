@@ -23,20 +23,38 @@ body{
   color:var(--text);
   font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
-.container{max-width:1020px; margin:0 auto; padding:26px 16px 44px;}
+.container{max-width:1020px; margin:0 auto; padding:0 16px 44px;}
 
-.header{display:flex; flex-direction:column; align-items:center; gap:10px; margin-bottom:10px;}
-.logoWrap{display:flex; align-items:center; justify-content:center;}
+/* Header tipo tu captura: bloque arriba, centrado, con logo grande */
+.headerBar{
+  width:100%;
+  background:linear-gradient(180deg, rgba(0,0,0,.88) 0%, rgba(0,0,0,.55) 60%, rgba(0,0,0,0) 100%);
+  padding:22px 0 18px;
+  margin-bottom:10px;
+}
+.headerInner{
+  max-width:1020px;
+  margin:0 auto;
+  padding:0 16px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
 .logo{
-  height:78px; width:auto; display:block;
-  filter:drop-shadow(0 10px 22px rgba(0,0,0,.5));
+  height:120px; /* MÁS GRANDE */
+  width:auto;
+  display:block;
+  filter:drop-shadow(0 12px 26px rgba(0,0,0,.55));
 }
 .logoFallback{
-  display:none; font-weight:950; letter-spacing:1px; font-size:34px;
+  display:none;
+  font-weight:950;
+  letter-spacing:1px;
+  font-size:40px;
 }
 .logoFallback b{ color:var(--accent); }
 
-h1{ text-align:center; margin:6px 0 8px; letter-spacing:.2px; font-size:30px; }
+h1{ text-align:center; margin:10px 0 8px; letter-spacing:.2px; font-size:30px; }
 .info{
   text-align:center; color:var(--muted);
   margin:0 auto 16px; max-width:860px; line-height:1.45;
@@ -184,37 +202,20 @@ button:active{transform:translateY(1px);}
   font-weight:1000;
   font-size:12px;
 }
-
-.logoTools{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:center;
-  align-items:center;
-}
-.logoTools input[type="file"]{
-  color:var(--muted);
-  font-weight:800;
-  font-size:12px;
-}
 </style>
 </head>
 
 <body>
-<div class="container">
 
-  <div class="header">
-    <div class="logoWrap">
-      <img id="logoImg" src="jrunlab.png" class="logo" alt="JRUN Logo"
-           onerror="tryAltLogo()" />
-      <div id="logoFallback" class="logoFallback">J<b>RUN</b></div>
-    </div>
-
-    <div class="logoTools">
-      <small>Si el logo no se ve en GitHub Pages, cárgalo aquí:</small>
-      <input id="logoFile" type="file" accept="image/*" />
-    </div>
+<div class="headerBar">
+  <div class="headerInner">
+    <img id="logoImg" src="jrunlab.png" class="logo" alt="JRUN Logo"
+         onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='block';" />
+    <div id="logoFallback" class="logoFallback">J<b>RUN</b></div>
   </div>
+</div>
+
+<div class="container">
 
   <h1>Calculadora de BAM y Zonas</h1>
 
@@ -295,6 +296,7 @@ button:active{transform:translateY(1px);}
       <span class="pill">BAM 3:15 → U1 4:30–4:35</span>
       y <span class="pill">U2 3:33–3:35</span>.
       Zona 1 se define como <span class="pill">&lt; 60% de BAM</span>.
+      (Estimación interna basada en modelo VDOT para aproximar la VAM y derivar la BAM.)
     </div>
   </div>
 
@@ -316,59 +318,17 @@ button:active{transform:translateY(1px);}
   <a class="cta" href="https://wa.link/ds6qw3" target="_blank" rel="noopener">
     Quiero mejorar mi rendimiento con una planificación individualizada
   </a>
+
 </div>
 
 <script>
-// ------------------------------
-// Logo handling: try multiple paths + file upload
-// ------------------------------
-let logoTryStep = 0;
-function tryAltLogo(){
-  const img = document.getElementById("logoImg");
-  const fallback = document.getElementById("logoFallback");
-
-  // Try common alternatives for GitHub Pages
-  const candidates = [
-    "./jrunlab.png",
-    "./assets/jrunlab.png",
-    "./JRUNLAB.png",
-    "./assets/JRUNLAB.png"
-  ];
-
-  if(logoTryStep < candidates.length){
-    img.src = candidates[logoTryStep++];
-    return;
-  }
-
-  // If all fail, show fallback text
-  img.style.display = "none";
-  fallback.style.display = "block";
-}
-
-document.getElementById("logoFile").addEventListener("change", (e) => {
-  const file = e.target.files?.[0];
-  if(!file) return;
-  const img = document.getElementById("logoImg");
-  const fallback = document.getElementById("logoFallback");
-  const reader = new FileReader();
-  reader.onload = () => {
-    img.src = reader.result;
-    img.style.display = "block";
-    fallback.style.display = "none";
-  };
-  reader.readAsDataURL(file);
-});
-
 // ------------------------------
 // Helpers
 // ------------------------------
 function parseTimeToSeconds(str){
   const s = (str || "").trim();
   if(!s) return null;
-
-  // allow "3 35" -> "3:35"
   const normalized = s.replace(/\s+/g, ":");
-
   const parts = normalized.split(":").map(p => p.trim());
   if(parts.length < 2 || parts.length > 3) return null;
   if(parts.some(p => p === "" || isNaN(Number(p)))) return null;
@@ -379,7 +339,6 @@ function parseTimeToSeconds(str){
     if(mm < 0 || ss < 0 || ss >= 60) return null;
     return mm*60 + ss;
   }
-
   const hh = Number(parts[0]);
   const mm = Number(parts[1]);
   const ss = Number(parts[2]);
@@ -406,7 +365,6 @@ function clearError(){
   el.style.display = "none";
   el.textContent = "";
 }
-
 function box(title, pace, extra){
   return `
     <div class="box">
@@ -418,7 +376,7 @@ function box(title, pace, extra){
 }
 
 // ------------------------------
-// VDOT/Daniels-like estimation -> BAM speed
+// VDOT/Daniels-like estimation -> "VAM proxy" -> BAM speed
 // ------------------------------
 function vo2FromV_mMin(v){
   return -4.60 + 0.182258*v + 0.000104*v*v;
@@ -434,7 +392,6 @@ function computeVDOT(distanceM, timeSec){
   return vo2 / pct;
 }
 function solveSpeedFromVDOT(vdot){
-  // 0.000104 v^2 + 0.182258 v + (-4.60 - vdot) = 0  (v in m/min)
   const a = 0.000104;
   const b = 0.182258;
   const c = -4.60 - vdot;
@@ -448,24 +405,21 @@ function solveSpeedFromVDOT(vdot){
 }
 
 // ------------------------------
-// Calibration from your anchor:
-// BAM 3:15 -> U1 4:30-4:35, U2 3:33-3:35
-// Use velocity ratios (not pace ratios)
+// Calibración por tu ancla:
+// BAM 3:15 -> U1 4:30–4:35, U2 3:33–3:35
+// Ratios en VELOCIDAD (no en ritmo)
 // ------------------------------
-const U1_RATIO_CENTER = 0.716; // ~71.6% of BAM speed
-const U2_RATIO_CENTER = 0.911; // ~91.1% of BAM speed
-
+const U1_RATIO_CENTER = 0.716;
+const U2_RATIO_CENTER = 0.911;
 const U1_RATIO_MIN = 0.709;
 const U1_RATIO_MAX = 0.722;
 const U2_RATIO_MIN = 0.907;
 const U2_RATIO_MAX = 0.915;
 
-// Zone 1 definition FIXED: < 60% of BAM speed
+// Zona 1: < 60% de BAM (corrige el error de los 9:xx/km)
 const Z1_OF_BAM = 0.60;
 
-// ------------------------------
-// Inputs: user can fill multiple -> weighted avg for stability
-// ------------------------------
+// Inputs: se pueden rellenar varios -> promedio ponderado
 const tests = [
   { id:"t1k",  name:"1 km",          d:1000,    w:1 },
   { id:"t2k",  name:"2 km",          d:2000,    w:2 },
@@ -493,4 +447,60 @@ function calculate(){
 
   const computed = [];
   for(const f of filled){
-    const vdot = computeV
+    const vdot = computeVDOT(f.d, f.sec);
+    const bamSpeed = solveSpeedFromVDOT(vdot); // proxy VAM -> usado para BAM estimada
+    if(!bamSpeed){
+      showError("No se pudo extrapolar la BAM con los datos introducidos.");
+      return;
+    }
+    computed.push({ ...f, vdot, bamSpeed });
+  }
+
+  let wSum = 0, bamSum = 0;
+  computed.forEach(x => { wSum += x.w; bamSum += x.bamSpeed * x.w; });
+  const BAM = bamSum / wSum; // m/s
+
+  const U1 = BAM * U1_RATIO_CENTER;
+  const U2 = BAM * U2_RATIO_CENTER;
+
+  const U1_min = BAM * U1_RATIO_MIN;
+  const U1_max = BAM * U1_RATIO_MAX;
+  const U2_min = BAM * U2_RATIO_MIN;
+  const U2_max = BAM * U2_RATIO_MAX;
+
+  const Z1_limit = BAM * Z1_OF_BAM;
+
+  const usedNames = computed.map(x => x.name).join(" + ");
+  document.getElementById("usedBadge").textContent =
+    computed.length === 1 ? `Extrapolación desde: ${usedNames}` : `Extrapolación mejorada desde: ${usedNames}`;
+
+  const res = document.getElementById("results");
+  res.innerHTML = `
+    ${box("Zona 1 · < 60% de BAM", paceFromSpeed(Z1_limit), speedToKmh(Z1_limit))}
+    ${box("Umbral 1 (U1) · calibrado desde BAM", paceFromSpeed(U1), `Rango aprox: ${paceFromSpeed(U1_max)} – ${paceFromSpeed(U1_min)}`)}
+    ${box("Zona 2 · entre U1 y U2", `${paceFromSpeed(U1_max)} → ${paceFromSpeed(U2_min)}`, "Rango recomendado")}
+    ${box("Umbral 2 (U2) · calibrado desde BAM", paceFromSpeed(U2), `Rango aprox: ${paceFromSpeed(U2_max)} – ${paceFromSpeed(U2_min)}`)}
+    ${box("Zona 3 · entre U2 y BAM", `${paceFromSpeed(U2_max)} → ${paceFromSpeed(BAM)}`, "Rango recomendado")}
+    ${box("BAM (estimada) · referencia VAM", paceFromSpeed(BAM), `${speedToKmh(BAM)} · VAM (proxy)`)}
+  `;
+}
+
+function resetAll(){
+  clearError();
+  tests.forEach(t => document.getElementById(t.id).value = "");
+  document.getElementById("usedBadge").textContent = "Sin cálculo todavía";
+  document.getElementById("results").innerHTML = `
+    <div class="box">
+      <span>Estado</span>
+      <strong>Rellena uno o varios tiempos y pulsa “Calcular”.</strong>
+      <em>Cuantos más campos, mejor extrapolación.</em>
+    </div>
+  `;
+}
+
+document.getElementById("calcBtn").addEventListener("click", calculate);
+document.getElementById("resetBtn").addEventListener("click", resetAll);
+</script>
+
+</body>
+</html>
