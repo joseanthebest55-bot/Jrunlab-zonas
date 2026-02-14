@@ -1,144 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JRUN LAB - Modelo 3 Zonas</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #000;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .container {
-      width: 95%;
-      max-width: 600px;
-      background: #111;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 0 30px rgba(255, 140, 0, 0.2);
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-      color: orange;
-    }
-    p {
-      text-align: center;
-      color: #ccc;
-      font-size: 14px;
-    }
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      margin-top: 15px;
-      font-size: 16px;
-      text-align: center;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      margin-top: 15px;
-      font-size: 16px;
-      font-weight: bold;
-      background: orange;
-      cursor: pointer;
-    }
-    .result {
-      margin-top: 20px;
-      background: #1a1a1a;
-      padding: 15px;
-      border-radius: 15px;
-    }
-    .zone {
-      margin-bottom: 10px;
-    }
-    .comment {
-      margin-top: 15px;
-      font-size: 13px;
-      background: rgba(255, 140, 0, 0.1);
-      padding: 10px;
-      border-radius: 10px;
-    }
-    .cta {
-      display: block;
-      margin-top: 20px;
-      text-align: center;
-      padding: 12px;
-      border-radius: 12px;
-      background: #000;
-      border: 1px solid orange;
-      color: #fff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .cta:hover {
-      background: orange;
-      color: #000;
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>JRUN Lab · Calculadora de Ritmos y Zonas</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Similar (condensada). Si quieres la EXACTA, pásame el .ttf/.otf -->
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <div class="container">
-    <h1>Modelo de 3 Zonas</h1>
-    <p>Introduce tu VAM en formato min/km (ej: 3:15)</p>
+  <div class="page">
+    <header class="header">
+      <div class="brand">
+        <img src="assets/jrunlab.png" alt="JRUN Lab" class="logo" />
+      </div>
+      <a class="cta" href="https://wa.link/ds6qw3" target="_blank" rel="noopener">
+        Contactar por WhatsApp · JRUN
+      </a>
+    </header>
 
-    <input type="text" id="vam" placeholder="3:15" />
-    <button onclick="calcular()">Calcular</button>
+    <main class="grid">
+      <section class="card">
+        <h1>Calculadora de ritmos y zonas</h1>
+        <p class="sub">
+          Se está utilizando un sistema de tres zonas de entrenamiento. Es el más práctico para usar porque es el que más sirve.
+        </p>
 
-    <div id="resultado" class="result" style="display:none;"></div>
+        <div class="form">
+          <div class="row">
+            <label>Distancia</label>
+            <select id="distance">
+              <option value="1000">1 km</option>
+              <option value="2000">2 km</option>
+              <option value="5000">5 km</option>
+              <option value="10000">10 km</option>
+              <option value="21097.5">Media maratón (21,0975 km)</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <label>Tiempo</label>
+            <input id="time" type="text" placeholder="mm:ss o hh:mm:ss (ej: 18:45 o 1:32:10)" />
+            <small>Usa “:” como separador. Ej: 4:05, 18:40, 1:29:30</small>
+          </div>
+
+          <div class="row">
+            <label>Porcentajes (sobre VAM en velocidad)</label>
+            <select id="preset">
+              <option value="classic" selected>Clásico (U1=66%, U2=83%)</option>
+              <option value="custom">Personalizado</option>
+            </select>
+          </div>
+
+          <div class="row two">
+            <div>
+              <label>Umbral 1 (U1) % de VAM</label>
+              <input id="u1" type="number" step="0.1" min="50" max="90" value="66" />
+            </div>
+            <div>
+              <label>Umbral 2 (U2) % de VAM</label>
+              <input id="u2" type="number" step="0.1" min="60" max="99" value="83" />
+            </div>
+          </div>
+
+          <div class="row">
+            <label>Límite Zona 1 (% de U1)</label>
+            <input id="z1lim" type="number" step="1" min="40" max="90" value="60" />
+            <small>Zona 1 = por debajo del X% del Umbral 1 (U1).</small>
+          </div>
+
+          <div class="actions">
+            <button id="calc" class="btn">Calcular</button>
+            <button id="reset" class="btn ghost">Reset</button>
+          </div>
+
+          <div id="error" class="error" hidden></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Resultados</h2>
+
+        <div class="kpis">
+          <div class="kpi">
+            <div class="kpiLabel">Ritmo de entrada</div>
+            <div id="inPace" class="kpiValue">—</div>
+          </div>
+          <div class="kpi">
+            <div class="kpiLabel">VAM estimada (vVO₂max)</div>
+            <div id="vam" class="kpiValue">—</div>
+            <div id="vamPace" class="kpiNote">—</div>
+          </div>
+          <div class="kpi">
+            <div class="kpiLabel">VDOT (referencia)</div>
+            <div id="vdot" class="kpiValue">—</div>
+          </div>
+        </div>
+
+        <div class="tableWrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Bloque</th>
+                <th>Velocidad</th>
+                <th>Ritmo</th>
+              </tr>
+            </thead>
+            <tbody id="rows">
+              <tr><td colspan="3" class="muted">Introduce distancia y tiempo, y pulsa “Calcular”.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="note">
+          <strong>Definición:</strong> U1 y U2 se calculan como % de la <strong>VAM</strong> (en velocidad).
+          Z1 &lt; X% de U1. Z2 entre U1 y U2. Z3 entre U2 y VAM.
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span>JRUN Lab · Sistema 3 zonas</span>
+      <a href="https://wa.link/ds6qw3" target="_blank" rel="noopener">https://wa.link/ds6qw3</a>
+    </footer>
   </div>
 
-  <script>
-    function paceToSeconds(pace) {
-      const parts = pace.split(":");
-      return parseInt(parts[0]) * 60 + parseInt(parts[1]);
-    }
-
-    function secondsToPace(seconds) {
-      const min = Math.floor(seconds / 60);
-      const sec = Math.round(seconds % 60);
-      return min + ":" + (sec < 10 ? "0" + sec : sec);
-    }
-
-    function calcular() {
-      const vamInput = document.getElementById("vam").value;
-      if (!vamInput.includes(":")) return;
-
-      const vamSeg = paceToSeconds(vamInput);
-
-      const pctZ1 = 0.65;
-      const pctU1 = 0.66;
-      const pctU2 = 0.83;
-
-      const ritmoZ1 = vamSeg / pctZ1;
-      const ritmoU1 = vamSeg / pctU1;
-      const ritmoU2 = vamSeg / pctU2;
-
-      const html = `
-        <div class="zone"><strong>Zona 1:</strong> Por debajo de ${secondsToPace(ritmoZ1)} (<65%)</div>
-        <div class="zone"><strong>Umbral 1:</strong> En torno a ${secondsToPace(ritmoU1)} (≈66%)</div>
-        <div class="zone"><strong>Zona 2:</strong> Entre ${secondsToPace(ritmoU1)} y ${secondsToPace(ritmoU2)} (66% - 83%)</div>
-        <div class="zone"><strong>Umbral 2:</strong> En torno a ${secondsToPace(ritmoU2)} (≈83%)</div>
-        <div class="zone"><strong>Zona 3:</strong> Entre ${secondsToPace(ritmoU2)} y ${vamInput} (83% - 100%)</div>
-        <div class="comment">Se está utilizando un modelo de 3 zonas de entrenamiento, es el más práctico para trabajar.</div>
-        <a class="cta" href="https://wa.link/ds6qw3" target="_blank">Quiero mejorar mi rendimiento con una planificación individualizada y profesional</a>
-      `;
-
-      const resultadoDiv = document.getElementById("resultado");
-      resultadoDiv.innerHTML = html;
-      resultadoDiv.style.display = "block";
-    }
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
-
