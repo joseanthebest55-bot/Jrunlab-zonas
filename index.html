@@ -1,135 +1,261 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>JRUN Lab · Calculadora de Ritmos y Zonas</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JRUN · Calculadora VAM y Zonas</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Similar (condensada). Si quieres la EXACTA, pásame el .ttf/.otf -->
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070707;
+  --card:#0f1114;
+  --text:#f3f5f7;
+  --muted:#a7b0ba;
+  --line:#1f242b;
+  --accent:#f39a17;
+}
 
-  <link rel="stylesheet" href="styles.css" />
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:radial-gradient(1000px 600px at 35% 0%, #12151b 0%, var(--bg) 60%);
+  color:var(--text);
+  font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.container{
+  max-width:900px;
+  margin:0 auto;
+  padding:30px 16px 50px;
+}
+
+.header{
+  display:flex;
+  justify-content:center;
+  margin-bottom:20px;
+}
+
+.logo{
+  height:80px;
+  width:auto;
+}
+
+h1{
+  text-align:center;
+  margin:0 0 10px;
+}
+
+.info{
+  text-align:center;
+  color:var(--muted);
+  margin-bottom:25px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.form{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+label{
+  font-weight:700;
+  font-size:14px;
+}
+
+input, select{
+  padding:12px;
+  border-radius:10px;
+  border:1px solid var(--line);
+  background:#0b0d10;
+  color:var(--text);
+}
+
+button{
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  font-weight:800;
+  cursor:pointer;
+  background:linear-gradient(180deg, #ffb347 0%, var(--accent) 70%);
+  color:#000;
+}
+
+.results{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+@media(max-width:700px){
+  .results{grid-template-columns:1fr;}
+}
+
+.box{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px;
+  background:#111418;
+}
+
+.box span{
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+}
+
+.box strong{
+  display:block;
+  font-size:18px;
+  margin-top:6px;
+}
+
+.cta{
+  display:block;
+  text-align:center;
+  text-decoration:none;
+  margin-top:20px;
+  padding:16px;
+  border-radius:14px;
+  font-weight:900;
+  background:linear-gradient(180deg, #ffb347 0%, var(--accent) 70%);
+  color:#000;
+}
+
+.error{
+  color:#ff8080;
+  margin-top:10px;
+}
+</style>
 </head>
 
 <body>
-  <div class="page">
-    <header class="header">
-      <div class="brand">
-        <img src="assets/jrunlab.png" alt="JRUN Lab" class="logo" />
-      </div>
-      <a class="cta" href="https://wa.link/ds6qw3" target="_blank" rel="noopener">
-        Contactar por WhatsApp · JRUN
-      </a>
-    </header>
 
-    <main class="grid">
-      <section class="card">
-        <h1>Calculadora de ritmos y zonas</h1>
-        <p class="sub">
-          Se está utilizando un sistema de tres zonas de entrenamiento. Es el más práctico para usar porque es el que más sirve.
-        </p>
+<div class="container">
 
-        <div class="form">
-          <div class="row">
-            <label>Distancia</label>
-            <select id="distance">
-              <option value="1000">1 km</option>
-              <option value="2000">2 km</option>
-              <option value="5000">5 km</option>
-              <option value="10000">10 km</option>
-              <option value="21097.5">Media maratón (21,0975 km)</option>
-            </select>
-          </div>
-
-          <div class="row">
-            <label>Tiempo</label>
-            <input id="time" type="text" placeholder="mm:ss o hh:mm:ss (ej: 18:45 o 1:32:10)" />
-            <small>Usa “:” como separador. Ej: 4:05, 18:40, 1:29:30</small>
-          </div>
-
-          <div class="row">
-            <label>Porcentajes (sobre VAM en velocidad)</label>
-            <select id="preset">
-              <option value="classic" selected>Clásico (U1=66%, U2=83%)</option>
-              <option value="custom">Personalizado</option>
-            </select>
-          </div>
-
-          <div class="row two">
-            <div>
-              <label>Umbral 1 (U1) % de VAM</label>
-              <input id="u1" type="number" step="0.1" min="50" max="90" value="66" />
-            </div>
-            <div>
-              <label>Umbral 2 (U2) % de VAM</label>
-              <input id="u2" type="number" step="0.1" min="60" max="99" value="83" />
-            </div>
-          </div>
-
-          <div class="row">
-            <label>Límite Zona 1 (% de U1)</label>
-            <input id="z1lim" type="number" step="1" min="40" max="90" value="60" />
-            <small>Zona 1 = por debajo del X% del Umbral 1 (U1).</small>
-          </div>
-
-          <div class="actions">
-            <button id="calc" class="btn">Calcular</button>
-            <button id="reset" class="btn ghost">Reset</button>
-          </div>
-
-          <div id="error" class="error" hidden></div>
-        </div>
-      </section>
-
-      <section class="card">
-        <h2>Resultados</h2>
-
-        <div class="kpis">
-          <div class="kpi">
-            <div class="kpiLabel">Ritmo de entrada</div>
-            <div id="inPace" class="kpiValue">—</div>
-          </div>
-          <div class="kpi">
-            <div class="kpiLabel">VAM estimada (vVO₂max)</div>
-            <div id="vam" class="kpiValue">—</div>
-            <div id="vamPace" class="kpiNote">—</div>
-          </div>
-          <div class="kpi">
-            <div class="kpiLabel">VDOT (referencia)</div>
-            <div id="vdot" class="kpiValue">—</div>
-          </div>
-        </div>
-
-        <div class="tableWrap">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Bloque</th>
-                <th>Velocidad</th>
-                <th>Ritmo</th>
-              </tr>
-            </thead>
-            <tbody id="rows">
-              <tr><td colspan="3" class="muted">Introduce distancia y tiempo, y pulsa “Calcular”.</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="note">
-          <strong>Definición:</strong> U1 y U2 se calculan como % de la <strong>VAM</strong> (en velocidad).
-          Z1 &lt; X% de U1. Z2 entre U1 y U2. Z3 entre U2 y VAM.
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <span>JRUN Lab · Sistema 3 zonas</span>
-      <a href="https://wa.link/ds6qw3" target="_blank" rel="noopener">https://wa.link/ds6qw3</a>
-    </footer>
+  <div class="header">
+    <img src="logo.png" class="logo" alt="JRUN Logo">
   </div>
 
-  <script src="app.js"></script>
+  <h1>Calculadora de Ritmos y Zonas</h1>
+
+  <p class="info">
+    Se está utilizando un modelo de tres zonas de entrenamiento.
+    Es el más práctico y el más correcto.
+  </p>
+
+  <div class="card">
+    <div class="form">
+      <label>Distancia</label>
+      <select id="distance">
+        <option value="1000">1 km</option>
+        <option value="2000">2 km</option>
+        <option value="5000">5 km</option>
+        <option value="10000">10 km</option>
+        <option value="21097">Media maratón</option>
+      </select>
+
+      <label>Tiempo (mm:ss o hh:mm:ss)</label>
+      <input type="text" id="time" placeholder="Ej: 18:45 o 1:29:30">
+
+      <button onclick="calculate()">Calcular</button>
+
+      <div id="error" class="error"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div id="results" class="results"></div>
+  </div>
+
+  <a class="cta"
+     href="https://wa.link/ds6qw3"
+     target="_blank">
+     Quiero mejorar mi rendimiento con una planificación individualizada
+  </a>
+
+</div>
+
+<script>
+function parseTimeToSeconds(time){
+  const parts = time.split(":").map(Number);
+  if(parts.length === 2){
+    return parts[0]*60 + parts[1];
+  }
+  if(parts.length === 3){
+    return parts[0]*3600 + parts[1]*60 + parts[2];
+  }
+  return null;
+}
+
+function formatPace(seconds){
+  const min = Math.floor(seconds/60);
+  const sec = Math.round(seconds%60);
+  return min + ":" + (sec<10?"0":"") + sec + "/km";
+}
+
+function calculate(){
+  const distance = parseFloat(document.getElementById("distance").value);
+  const timeStr = document.getElementById("time").value;
+  const error = document.getElementById("error");
+  const results = document.getElementById("results");
+
+  error.textContent="";
+  results.innerHTML="";
+
+  const totalSec = parseTimeToSeconds(timeStr);
+  if(!totalSec){
+    error.textContent="Formato de tiempo incorrecto.";
+    return;
+  }
+
+  // Velocidad media prueba (m/s)
+  const speed = distance / totalSec;
+
+  // Modelo tipo Daniels simplificado para estimar VAM
+  const v_m_min = speed * 60;
+  const vo2 = -4.6 + 0.182258*v_m_min + 0.000104*v_m_min*v_m_min;
+  const percent = 0.8 + 0.1894393*Math.exp(-0.012778*(totalSec/60)) +
+                  0.2989558*Math.exp(-0.1932605*(totalSec/60));
+  const VDOT = vo2/percent;
+
+  const a=0.000104;
+  const b=0.182258;
+  const c=-4.6-VDOT;
+  const disc=b*b-4*a*c;
+  const vam_m_min=(-b+Math.sqrt(disc))/(2*a);
+  const vam=vam_m_min/60; // m/s
+
+  // Umbrales
+  const u1 = vam*0.66;
+  const u2 = vam*0.83;
+
+  const z1 = u1*0.60;
+
+  function box(title, speed){
+    return `
+      <div class="box">
+        <span>${title}</span>
+        <strong>${formatPace(1000/speed)}</strong>
+      </div>
+    `;
+  }
+
+  results.innerHTML += box("Zona 1 (<60% U1)", z1);
+  results.innerHTML += box("Umbral 1 (66% VAM)", u1);
+  results.innerHTML += box("Zona 2 (entre U1 y U2)", (u1+u2)/2);
+  results.innerHTML += box("Umbral 2 (83% VAM)", u2);
+  results.innerHTML += box("Zona 3 (entre U2 y VAM)", (u2+vam)/2);
+  results.innerHTML += box("VAM", vam);
+}
+</script>
+
 </body>
 </html>
