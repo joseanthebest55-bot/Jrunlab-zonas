@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>JRUN LAB - Modelo de Zonas</title>
+
+<style>
+
+body{
+  background:#000;
+  color:#fff;
+  font-family:Arial, Helvetica, sans-serif;
+  text-align:center;
+  padding:40px;
+}
+
+.container{
+  max-width:700px;
+  margin:auto;
+}
+
+.logo{
+  width:250px;
+  margin-bottom:30px;
+}
+
+h1{
+  color:#ff7a00;
+  letter-spacing:2px;
+}
+
+.section{
+  background:#111;
+  padding:20px;
+  margin-top:20px;
+  border-left:4px solid #ff7a00;
+}
+
+.row{
+  display:flex;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.row input{
+  flex:1;
+  padding:10px;
+  background:#1c1c1c;
+  border:1px solid #333;
+  color:white;
+}
+
+button{
+  width:100%;
+  padding:15px;
+  margin-top:25px;
+  background:#ff7a00;
+  color:black;
+  font-weight:bold;
+  border:none;
+  cursor:pointer;
+  font-size:16px;
+}
+
+button:hover{
+  background:#ffa040;
+}
+
+.result{
+  margin-top:30px;
+  background:#111;
+  padding:25px;
+  border-left:4px solid #ff7a00;
+}
+
+.zone{
+  margin-top:15px;
+  color:#ff7a00;
+  font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<img src="jrunlab.png" class="logo">
+
+<h1>MODELO DE ZONAS JRUN LAB</h1>
+<p>Introduce uno o varios tiempos</p>
+
+<div class="section">
+
+<h3>1 km</h3>
+<div class="row">
+  <input type="number" id="t1m" placeholder="Minutos">
+  <input type="number" id="t1s" placeholder="Segundos">
+</div>
+
+<h3>2 km</h3>
+<div class="row">
+  <input type="number" id="t2m" placeholder="Minutos">
+  <input type="number" id="t2s" placeholder="Segundos">
+</div>
+
+<h3>5 km</h3>
+<div class="row">
+  <input type="number" id="t5m" placeholder="Minutos">
+  <input type="number" id="t5s" placeholder="Segundos">
+</div>
+
+<h3>10 km</h3>
+<div class="row">
+  <input type="number" id="t10m" placeholder="Minutos">
+  <input type="number" id="t10s" placeholder="Segundos">
+</div>
+
+<h3>Media Maratón (21.1 km)</h3>
+<div class="row">
+  <input type="number" id="t21m" placeholder="Minutos">
+  <input type="number" id="t21s" placeholder="Segundos">
+</div>
+
+<button onclick="calculate()">CALCULAR ZONAS</button>
+
+</div>
+
+<div class="result" id="output"></div>
+
+</div>
+
+<script>
+
+function paceFromSpeed(speed){
+  let pace = 60 / speed;
+  let min = Math.floor(pace);
+  let sec = Math.round((pace - min) * 60);
+  if(sec < 10){ sec = "0" + sec; }
+  return min + ":" + sec + " /km";
+}
+
+function getTime(minId, secId){
+  let m = parseFloat(document.getElementById(minId).value);
+  let s = parseFloat(document.getElementById(secId).value);
+
+  if(isNaN(m) && isNaN(s)) return null;
+  if(isNaN(m)) m = 0;
+  if(isNaN(s)) s = 0;
+
+  return m + (s/60);
+}
+
+function calculate(){
+
+  let tests = [
+    {dist:1,   time:getTime("t1m","t1s"),  pct:1.02, weight:1.0},
+    {dist:2,   time:getTime("t2m","t2s"),  pct:1.00, weight:1.2},
+    {dist:5,   time:getTime("t5m","t5s"),  pct:0.95, weight:1.0},
+    {dist:10,  time:getTime("t10m","t10s"), pct:0.90, weight:0.8},
+    {dist:21.1,time:getTime("t21m","t21s"), pct:0.85, weight:0.6}
+  ];
+
+  let vamSum = 0;
+  let weightSum = 0;
+
+  tests.forEach(t=>{
+    if(t.time !== null && t.time > 0){
+      let speed = t.dist / (t.time / 60);
+      let vamEstimate = speed / t.pct;
+      vamSum += vamEstimate * t.weight;
+      weightSum += t.weight;
+    }
+  });
+
+  if(weightSum === 0){
+    document.getElementById("output").innerHTML =
+      "<p>Introduce al menos un tiempo válido.</p>";
+    return;
+  }
+
+  let vam = vamSum / weightSum;
+
+  // ZONAS SOBRE VELOCIDAD
+  let z1 = vam * 0.60;
+  let z2 = vam * 0.80;
+
+  document.getElementById("output").innerHTML = `
+    <h2 style="color:#ff7a00;">RESULTADOS</h2>
+    <p><strong>VAM:</strong> ${vam.toFixed(2)} km/h (${paceFromSpeed(vam)})</p>
+    <hr style="border-color:#333;">
+
+    <div class="zone">ZONA 3 (80-100%)</div>
+    <p>${paceFromSpeed(z2)} - ${paceFromSpeed(vam)}</p>
+
+    <div class="zone">ZONA 2 (60-80%)</div>
+    <p>${paceFromSpeed(z1)} - ${paceFromSpeed(z2)}</p>
+
+    <div class="zone">ZONA 1 (<60%)</div>
+    <p>Más lento que ${paceFromSpeed(z1)}</p>
+  `;
+}
+
+</script>
+
+</body>
+</html>
